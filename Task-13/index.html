@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>JS For Beginners</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>JS For Beginners</h1>
+  </header>
+
+  <section class="container">
+    <form id="my-form">
+      <h1>Add User</h1>
+      <div class="msg"></div>
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name">
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="text" id="email">
+      </div>
+      <input class="btn" type="submit" value="Submit">
+    </form>
+
+    <ul id="users"></ul>
+  </section>
+  <script>
+    const form = document.getElementById('my-form');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const usersList = document.getElementById('users');
+  
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+  
+      const name = nameInput.value;
+      const email = emailInput.value;
+  
+      if (name && email) {
+        const userDetails = {
+          name: name,
+          email: email
+        };
+  
+        const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
+        existingUsers.push(userDetails);
+        localStorage.setItem('users', JSON.stringify(existingUsers));
+  
+        nameInput.value = '';
+        emailInput.value = '';
+  
+        updateUsersList(existingUsers);
+      }
+    });
+  
+    function updateUsersList(users) {
+      usersList.innerHTML = '';
+      users.forEach((user, index) => {
+        const li = document.createElement('li');
+        li.textContent = `Name: ${user.name}, Email: ${user.email}`;
+  
+        // Create a delete button for each user entry
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', () => {
+          deleteUser(index);
+        });
+  
+        li.appendChild(deleteButton);
+        usersList.appendChild(li);
+      });
+    }
+  
+    function deleteUser(index) {
+      const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
+      existingUsers.splice(index, 1); // Remove the user at the specified index
+      localStorage.setItem('users', JSON.stringify(existingUsers));
+      updateUsersList(existingUsers);
+    }
+  
+    const initialUsers = JSON.parse(localStorage.getItem('users')) || [];
+    updateUsersList(initialUsers);
+  </script>
+
+  
