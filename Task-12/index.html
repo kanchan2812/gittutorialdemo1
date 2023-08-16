@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>JS For Beginners</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>JS For Beginners</h1>
+  </header>
+
+  <section class="container">
+    <form id="my-form">
+      <h1>Add User</h1>
+      <div class="msg"></div>
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name">
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="text" id="email">
+      </div>
+      <input class="btn" type="submit" value="Submit">
+    </form>
+
+    <ul id="users"></ul>
+  </section>
+
+  <script>
+    const form = document.getElementById('my-form');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const usersList = document.getElementById('users');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = nameInput.value;
+      const email = emailInput.value;
+
+      if (name && email) {
+        const userDetails = {
+          name: name,
+          email: email
+        };
+
+        // Get existing users from local storage (if any)
+        const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Add the new user to the existing users array
+        existingUsers.push(userDetails);
+
+        // Store the updated users array in local storage
+        localStorage.setItem('users', JSON.stringify(existingUsers));
+
+        // Clear the input fields
+        nameInput.value = '';
+        emailInput.value = '';
+
+        // Update the user list
+        updateUsersList(existingUsers);
+      }
+    });
+
+    function updateUsersList(users) {
+      usersList.innerHTML = '';
+      users.forEach(user => {
+        const li = document.createElement('li');
+        li.textContent = `Name: ${user.name}, Email: ${user.email}`;
+        usersList.appendChild(li);
+      });
+    }
+
+    // Initial update of the users list from local storage
+    const initialUsers = JSON.parse(localStorage.getItem('users')) || [];
+    updateUsersList(initialUsers);
+  </script>
+</body>
+</html>
